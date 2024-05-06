@@ -23,7 +23,7 @@ class Network:
     processors_amount_percentage: int
     transactions_per_block: int
 
-    def __init__(self, processors_amount_percentage: int = 20, transactions_per_block: int = 5) -> None:
+    def __init__(self, processors_amount_percentage: int = 20, transactions_per_block: int = 30) -> None:
         self.blocks = [Block.genesis()]
         self.miners = {}
         self.previous_block = self.blocks[0]
@@ -88,9 +88,8 @@ class Network:
                 hashes_occurrence[data.work_hash] += 1
 
         legitimate_hash = max(hashes_occurrence, key=lambda k: hashes_occurrence[k])
-
         hash_verificator = choice(list(self.miners.keys())) # TODO: rewrite with check is miner processed the same transaction
-        
+     
         verification_transaction_output = self.miners[hash_verificator].process_transaction(current_transaction_input_data)
 
         if verification_transaction_output.work_hash != legitimate_hash:

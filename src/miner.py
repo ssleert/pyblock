@@ -1,13 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from enum import Enum
 from blockchain import Block, Transaction
 
 class Miner:
-    class MessageType(Enum):
-        verification_req = 1
-        work_completed_req = 2
-
     @dataclass
     class TransactionInputData:
         id_bytes: bytes
@@ -19,7 +14,6 @@ class Miner:
 
     @dataclass
     class TransactionOutputData:
-        _type: Miner.MessageType
         id_bytes: bytes
         work_hash: bytes
         magic_value: bytes
@@ -51,7 +45,6 @@ class Miner:
             input.magic_value
         )
         return Miner.TransactionOutputData(
-            _type = Miner.MessageType.work_completed_req,
             id_bytes = input.id_bytes, 
             work_hash = work_hash, 
             magic_value = input.magic_value

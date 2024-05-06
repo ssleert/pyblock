@@ -3,7 +3,6 @@ from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from xxhash import xxh64
 from secrets import token_bytes
-from loguru import logger
 import json
 
 @dataclass
@@ -28,7 +27,7 @@ class Transaction:
 
     @staticmethod
     def get_work_hash(sender: bytes, reciever: bytes, payload: bytes, magic_value: bytes) -> bytes:
-        return xxh64(bytes(magic_value) + sender + payload + reciever).digest() 
+        return xxh64(magic_value + sender + payload + reciever).digest() 
 
 @dataclass
 class Block:
@@ -92,9 +91,6 @@ class Block:
             transactions      = transactions,
             transactions_hash = transactions_hash,
         )
-
-        logger.info(f"new block created! {new_block!r}")
-        logger.info(f"block hash: {new_block.hash!r}")
 
         return new_block
 
