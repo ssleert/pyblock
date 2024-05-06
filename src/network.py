@@ -23,7 +23,7 @@ class Network:
     processors_amount_percentage: int
     transactions_per_block: int
 
-    def __init__(self, processors_amount_percentage: int = 20, transactions_per_block: int = 30) -> None:
+    def __init__(self, processors_amount_percentage: int = 20, transactions_per_block: int = 5) -> None:
         self.blocks = [Block.genesis()]
         self.miners = {}
         self.previous_block = self.blocks[0]
@@ -107,7 +107,7 @@ class Network:
              work_hash            = legitimate_hash,
         ))
 
-        if len(self.current_transactions) == self.transactions_per_block - 1:
+        if len(self.current_transactions) == self.transactions_per_block:
             block = Block.gen(
                 previous_block = self.previous_block,
                 payload        = b"i love u", # TODO: normal payload :(

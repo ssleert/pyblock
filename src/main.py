@@ -22,8 +22,10 @@ def main(_: list[str]) -> int:
     for key, val in miners_pool.items():
         blockchain_network.connect_miner(key, val)
 
-    for i in range(0, 1000000):
+    for i in range(0, 300):
         blockchain_network.process_transaction(b"simon", b"*******", b"love")
+
+    pp(blockchain_network.blocks)
 
     return 0
 

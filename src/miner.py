@@ -41,8 +41,7 @@ class Miner:
         work_hash = Transaction.get_work_hash(
             input.sender_id, 
             input.reciever_id, 
-            input.payload, 
-            input.magic_value
+            input.payload,
         )
         return Miner.TransactionOutputData(
             id_bytes = input.id_bytes, 

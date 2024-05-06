@@ -26,8 +26,8 @@ class Transaction:
         return token_bytes(32)
 
     @staticmethod
-    def get_work_hash(sender: bytes, reciever: bytes, payload: bytes, magic_value: bytes) -> bytes:
-        return xxh64(magic_value + sender + payload + reciever).digest() 
+    def get_work_hash(sender: bytes, reciever: bytes, payload: bytes) -> bytes:
+        return xxh64(sender + payload + reciever).digest() 
 
 @dataclass
 class Block:
@@ -53,7 +53,11 @@ class Block:
     def hash_from_transactions(transactions: list[Transaction]) -> bytes:
         hashes = list[bytes]()
         for tx in transactions:
-            hashes.append(xxh64(bytes(tx.connected_block_hash) + tx.payload).digest())
+            hashes.append(
+                xxh64(
+                    tx.sender_id + tx.reciever_id + tx.payload + tx.work_hash
+                ).digest()
+            )
 
         return xxh64(b"".join(hashes)).digest()
 
