@@ -52,11 +52,11 @@ class Block:
 
     @staticmethod
     def hash_from_transactions(transactions: list[Transaction]) -> bytes:
-        hashes = list[int]()
+        hashes = list[bytes]()
         for tx in transactions:
-            hashes.append(xxh64(bytes(tx.connected_block_hash) + tx.payload).intdigest())
+            hashes.append(xxh64(bytes(tx.connected_block_hash) + tx.payload).digest())
 
-        return xxh64(bytes(hashes)).digest()
+        return xxh64(b"".join(hashes)).digest()
 
     @staticmethod
     def create(

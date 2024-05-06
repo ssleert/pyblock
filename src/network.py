@@ -33,6 +33,10 @@ class Network:
         self.processors_amount_percentage = processors_amount_percentage
         self.transactions_per_block = transactions_per_block
 
+    def broadcast_previous_block_to_miners(self) -> None:
+        for _, miner in self.miners.items():
+            miner.broadcast_new_block(self.previous_block)
+
     def connect_miner(self, miner_id: bytes, miner: Miner) -> None:
         self.miners[miner_id] = miner
     
@@ -92,26 +96,28 @@ class Network:
         if verification_transaction_output.work_hash != legitimate_hash:
             self.process_transaction(sender_id, reciever_id, payload, retryes - 1)
 
-
         self.current_transactions.append(Transaction(
-             id_bytes = current_transaction_input_data.id_bytes,
+             id_bytes             = current_transaction_input_data.id_bytes,
              connected_block_hash = current_transaction_input_data.connected_block_hash,
-             timestamp = datetime.now(timezone.utc),
-             sender_id = current_transaction_input_data.sender_id,
-             reciever_id = current_transaction_input_data.reciever_id,
-             verificator_id = hash_verificator,
-             payload = current_transaction_input_data.payload,
-             magic_bytes = current_transaction_input_data.magic_value,
-             work_hash = legitimate_hash,
+             timestamp            = datetime.now(timezone.utc),
+             sender_id            = current_transaction_input_data.sender_id,
+             reciever_id          = current_transaction_input_data.reciever_id,
+             verificator_id       = hash_verificator,
+             payload              = current_transaction_input_data.payload,
+             magic_bytes          = current_transaction_input_data.magic_value,
+             work_hash            = legitimate_hash,
         ))
 
         if len(self.current_transactions) == self.transactions_per_block - 1:
             block = Block.gen(
                 previous_block = self.previous_block,
-                payload = b"i love u", # TODO: normal payload :(
-                transactions = self.current_transactions
+                payload        = b"i love u", # TODO: normal payload :(
+                transactions   = self.current_transactions
             )
             self.current_transactions = []
-            self.previous_block = block
 
             self.blocks.append(block)
+            self.previous_block = block
+            self.broadcast_previous_block_to_miners()
+
+
